@@ -3,6 +3,8 @@
 ;;Inspiração SICP - 3.3.5 Propagation of Constraints
 ;;Modificado, mais operacoes e nova systax.
 
+(define pi 3.141592654)
+
 (define (adder a1 a2 sum)
   (define (process-new-value)
     (cond ((and (has-value? a1) (has-value? a2))
@@ -132,6 +134,87 @@
   (connect d2       me)
   me)
 
+(define (sine ang value-sin)
+  (define (process-new-value)
+    (cond ((has-value? ang)
+           (let ((calc (sin (get-value ang))))
+             (cond ((and (>= calc -1) (<= calc 1))
+                    (set-value! value-sin
+                                calc
+                                me)))))
+          ((and (has-value? value-sin) (<= (get-value value-sin) 1)
+                (>= (get-value value-sin) -1))           
+           (set-value! ang
+                       (asin (get-value value-sin))
+                       me))))
+  (define (process-forget-value)
+    (forget-value! value-sin me)
+    (forget-value! ang       me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+           (error "Unknown request -- SIN " request))))
+  (connect value-sin me)
+  (connect ang me)
+  me)
+
+(define (cosine ang value-cos)
+  (define (process-new-value)
+    (cond ((has-value? ang)
+           (let ((calc (cos (get-value ang))))
+             (cond ((and (<= calc 1) (>= calc -1))
+                    (set-value! value-cos
+                                calc
+                                me)))))
+          ((and (has-value? value-cos) (<= (get-value value-cos) 1)
+                (>= (get-value value-cos) -1))
+           (set-value! ang
+                       (acos value-cos)
+                       me))))
+  (define (process-forget-value)
+    (forget-value! value-cos me)
+    (forget-value! ang       me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+           (error "Unknown request -- COS " request))))
+  (connect value-cos me)
+  (connect ang       me)
+  me)
+
+(define (tangent ang value-tan)
+  (define (process-new-value)
+    (cond ((has-value? ang)
+           (set-value! value-tan
+                       (tan (get-value ang))
+                       me))
+          ((has-value? value-tan)
+           (set-value! ang
+                       (atan (get-value value-tan))
+                       me))))
+  (define (process-forget-value)
+    (forget-value! value-tan me)
+    (forget-value! ang       me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+           (error "Unknown request -- TAN " request))))
+  (connect value-tan me)
+  (connect ang       me)
+  me)
+
 (define (constant value connector)
   (define (me request)
     (error "Unknown request -- CONSTANT" request))
@@ -247,4 +330,9 @@
     (constant 9  w)
     (constant 5  x)
     (constant 32 y)
+    'ok))
+(define (cord-to-ang x y ang)
+  (let ((u (make-connector)))
+    (divider x y u)
+    (tangent ang u)
     'ok))
