@@ -293,6 +293,29 @@
   (connect num2 me)
   me)
 
+(define (equal-less num1 num2)
+  (define (process-new-value)
+    (cond ((has-value? num1)
+           (set-max! num1 (get-value num1))
+           (set-min! num2 (get-value num1)) )
+          ((has-value? num2)
+           (set-max! num1 (get-value num2))
+           (set-min! num2 (get-value num2))) ))
+  (define (process-forget-value)
+    (forget-value! num1 me)
+    (forget-value! num2 me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+           (error "Unkwown request -- EQUAL LESS " request))))
+  (connect num1 me)
+  (connect num2 me)
+  me)
+
 (define (constant value connector)
   (define (me request)
     (error "Unknown request -- CONSTANT" request))
@@ -327,20 +350,59 @@
   me)
 
 (define (make-connector)
-  (let ((value #f) (informant #f) (constraints '()))
+  (let ((value #f) (informant #f) (constraints '()) (min #f) (max #f) (flag #f))
     (define (set-my-value newval setter)
       (cond ((not (has-value? me))
-             (set! value newval)
-             (set! informant setter)
-             (for-each-except setter
-                              inform-about-value
-                              constraints))
-            ((not (< (abs (- value newval)) precision))
-             (error "Contradiction" (list value newval)))
+             (cond ((and (not min) (not max))
+                    (set! flag #t)
+                    (set! value newval))
+                   ((and (not min) max)
+                    (when (< newval max)
+                        (begin
+                          (set! flag #t)
+                          (set! value newval)) ))
+                   ((and min (not max))
+                    (when (> newval min)
+                        (begin
+                          (set! flag #t)
+                          (set! value newval)) ))
+                   ((and min max)
+                    (when (and (> newval min) (< newval max))
+                        (begin
+                          (set! flag #t)
+                          (set! value newval)) )))
+             (if flag
+                 (begin
+                   (set! flag #f)
+                   (set! informant setter)
+                   (for-each-except setter
+                                    inform-about-value
+                                    constraints))
+                 'ignored))
+            ((has-value? me)
+             (cond ((and (not min) (not max) (not (< (abs (- value newval)) precision)))
+                    (set! flag #t))
+                   ((and (not min) max (> newval max))
+                    (set! flag #t))
+                   ((and min (not max) (< newval min))
+                    (set! flag #t))
+                   ((and min max (> newval max) (< newval min))
+                    (set! flag #t)))
+             (if flag
+                 (begin
+                   (set! flag #f)
+                   (error "Contradiction" (list value newval)))
+                 'ignored))
             (else 'ignored)))
+    (define (set-my-min minval)
+      (set! min minval))
+    (define (set-my-max maxval)
+      (set! max maxval))
     (define (forget-my-value retractor)
       (if (eq? retractor informant)
           (begin (set! informant #f)
+                 (set! min #f)
+                 (set! max #f)
                  (for-each-except retractor
                                   inform-about-no-value
                                   constraints))
@@ -359,6 +421,8 @@
             ((eq? request 'set-value!) set-my-value)
             ((eq? request 'forget) forget-my-value)
             ((eq? request 'connect) connect)
+            ((eq? request 'set-min!) set-my-min)
+            ((eq? request 'set-max!) set-my-max)
             (else (error "Unknown operation -- CONNECTOR"
                          request))))
     me))
@@ -381,4 +445,7 @@
   ((connector 'forget) retractor))
 (define (connect connector new-constraint)
   ((connector 'connect) new-constraint))
-
+(define (set-min! connector minval)
+  ((connector 'set-min!) minval))
+(define (set-max! connector maxval)
+  ((connector 'set-max!) maxval))

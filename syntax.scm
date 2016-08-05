@@ -73,13 +73,18 @@
     ((=v u v)
      (equal u v))))
 
+(define-syntax <=v
+  (syntax-rules ()
+    ((<=v u v)
+     (equal-less u v))))
+
 (define-syntax name-value
   (syntax-rules ()
     ((name-value name lst)
      (let ((element (assoc name lst)))
        (if element
            (cadr element)
-           '())))))
+           (error "Unknown variable " name))))))
 
 (define (print-probe name value)
   (cond ((not value) (set! value "?")))

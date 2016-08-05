@@ -42,5 +42,5 @@
 ;;(cord-ang 'ang 'print)
 ;;(cord-ang '(x y) 'print)
 (define cord-ang
-  (define c-p '((x "x") (y "y") (ang "ang"))
+  (c-p '((x "x") (y "y") (ang "ang"))
     (lambda(a b c) (=v (/v a b) (tanv c))) )) 
