@@ -3,7 +3,10 @@
 ;;Inspiração SICP - 3.3.5 Propagation of Constraints
 ;;Modificado, mais operacoes e nova systax.
 
+(use-modules (ice-9 match))
+
 (define pi 3.141592654)
+(define precision 1e-7)
 
 (define (adder a1 a2 sum)
   (define (process-new-value)
@@ -248,7 +251,7 @@
                        me))
           ((and (has-value? value-sqr) (>= (get-value value-sqr) 0))
            (set-value! num
-                       (sqrt (get-value value-num))
+                       (sqrt (get-value value-sqr))
                        me))))
   (define (process-forget-value)
     (forget-value! value-sqr me)
@@ -263,6 +266,31 @@
            (error "Unknown request -- SQUARE " request))))
   (connect value-sqr me)
   (connect num me)
+  me)
+
+(define (equal num1 num2)
+  (define (process-new-value)
+    (cond ((has-value? num1)
+           (set-value! num2
+                       (get-value num1)
+                       me))
+          ((has-value? num2)
+           (set-value! num1
+                       (get-value num2)
+                       me))))
+  (define (process-forget-value)
+    (forget-value! num2 me)
+    (forget-value! num1 me)
+    (process-new-value))
+  (define (me request)
+    (cond ((eq? request 'I-have-a-value)
+           (process-new-value))
+          ((eq? request 'I-lost-my-value)
+           (process-forget-value))
+          (else
+           (error "Unknown request -- EQUAL " request))))
+  (connect num1 me)
+  (connect num2 me)
   me)
 
 (define (constant value connector)
@@ -307,7 +335,7 @@
              (for-each-except setter
                               inform-about-value
                               constraints))
-            ((not (= value newval))
+            ((not (< (abs (- value newval)) precision))
              (error "Contradiction" (list value newval)))
             (else 'ignored)))
     (define (forget-my-value retractor)
@@ -354,35 +382,3 @@
 (define (connect connector new-constraint)
   ((connector 'connect) new-constraint))
 
-(define (celsius-fahrenheit-converter c f)
-  (let ((u (make-connector))
-        (v (make-connector))
-        (w (make-connector))
-        (x (make-connector))
-        (y (make-connector)))
-    (multiplier c w u)
-    (multiplier v x u)
-    (adder v y f)
-    (constant 9 w)
-    (constant 5 x)
-    (constant 32 y)
-    'ok))
-
-(define (c-to-f c f)
-  (let ((u (make-connector))
-        (v (make-connector))
-        (w (make-connector))
-        (x (make-connector))
-        (y (make-connector)))
-    (subtractor f y v)
-    (multiplier v x u)
-    (multiplier c w u)
-    (constant 9  w)
-    (constant 5  x)
-    (constant 32 y)
-    'ok))
-(define (cord-to-ang x y ang)
-  (let ((u (make-connector)))
-    (divider x y u)
-    (tangent ang u)
-    'ok))
