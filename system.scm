@@ -5,6 +5,7 @@
 
 (use-modules (ice-9 match))
 
+(define degrees #t)
 (define pi 3.141592654)
 (define precision 1e-7)
 
@@ -137,10 +138,20 @@
   (connect d2       me)
   me)
 
+(define (degrees-to-radians ang)
+  (if degrees
+      (/ (* ang pi) 180)
+      ang))
+
+(define (radians-to-degrees ang)
+  (if degrees
+      (/ (* ang 180) pi)
+      ang))
+
 (define (sine ang value-sin)
   (define (process-new-value)
     (cond ((has-value? ang)
-           (let ((calc (sin (get-value ang))))
+           (let ((calc (sin (degrees-to-radians (get-value ang)))))
              (cond ((and (>= calc -1) (<= calc 1))
                     (set-value! value-sin
                                 calc
@@ -148,7 +159,7 @@
           ((and (has-value? value-sin) (<= (get-value value-sin) 1)
                 (>= (get-value value-sin) -1))           
            (set-value! ang
-                       (asin (get-value value-sin))
+                       (radians-to-degrees (asin (get-value value-sin)))
                        me))))
   (define (process-forget-value)
     (forget-value! value-sin me)
@@ -168,7 +179,7 @@
 (define (cosine ang value-cos)
   (define (process-new-value)
     (cond ((has-value? ang)
-           (let ((calc (cos (get-value ang))))
+           (let ((calc (cos (degrees-to-radians (get-value ang)))))
              (cond ((and (<= calc 1) (>= calc -1))
                     (set-value! value-cos
                                 calc
@@ -176,7 +187,7 @@
           ((and (has-value? value-cos) (<= (get-value value-cos) 1)
                 (>= (get-value value-cos) -1))
            (set-value! ang
-                       (acos value-cos)
+                       (radians-to-degrees (acos value-cos))
                        me))))
   (define (process-forget-value)
     (forget-value! value-cos me)
@@ -197,11 +208,11 @@
   (define (process-new-value)
     (cond ((has-value? ang)
            (set-value! value-tan
-                       (tan (get-value ang))
+                       (tan (degrees-to-radians (get-value ang)))
                        me))
           ((has-value? value-tan)
            (set-value! ang
-                       (atan (get-value value-tan))
+                       (radians-to-degrees (atan (get-value value-tan)))
                        me))))
   (define (process-forget-value)
     (forget-value! value-tan me)
