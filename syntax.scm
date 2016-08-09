@@ -78,6 +78,11 @@
     ((<=v u v)
      (equal-less u v))))
 
+(define-syntax >=v
+  (syntax-rules ()
+    ((>=v u v)
+     (equal-more u v))))
+
 (define-syntax name-value
   (syntax-rules ()
     ((name-value name lst)
