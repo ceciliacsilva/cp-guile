@@ -187,7 +187,7 @@
           ((and (has-value? value-cos) (<= (get-value value-cos) 1)
                 (>= (get-value value-cos) -1))
            (set-value! ang
-                       (radians-to-degrees (acos value-cos))
+                       (radians-to-degrees (acos (get-value value-cos)))
                        me))))
   (define (process-forget-value)
     (forget-value! value-cos me)
