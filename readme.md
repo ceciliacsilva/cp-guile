@@ -22,7 +22,7 @@ Syntax
 For exemple:
 
 	> (*v (cv 20) (cv 30))
-    	> (+v (sinv 90) (cv 3))
+	> (+v (sinv 90) (cv 3))
 
 Exemples:
 -------
