@@ -32,6 +32,23 @@ At the directory 'exemples' has two very simple programs:
        temperature.scm: relationship 9C = 5(F - 32) expressed in three different way.
        mix.scm: angle-coordinates.
 
+To use:
+
+       $ cd exemples/
+       $ guile
+       > (load "../system.scm")
+       > (load "../syntax.scm")
+       > (load "mix.scm")
+       > (cord-ang 'x 'set 2)
+       Probe: x = 2
+       $1 = done
+       > (cord-ang 'y 'set-value! 2)
+       Probe: ang = 44.99999999412422
+       Probe: y = 2
+       $2 = done
+
+More info on files.
+
 Robot
 -----
 
