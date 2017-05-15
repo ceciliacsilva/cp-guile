@@ -1,4 +1,7 @@
-(load "system.scm")
+#lang racket
+
+(require "system.scm")
+(provide (all-defined-out))
 
 (define-syntax +v
   (syntax-rules ()
@@ -103,14 +106,14 @@
   (let* ((variable
           (map (lambda (a)
                  (match a
-                   ((var _)
+                   ((list var _)
                     (list var (make-connector))))) input))
          (connectors (map (lambda(a) (cadr a)) variable)))
     (map (lambda(a) (match a
-                      ((name con)
+                      ((list name con)
                        (probe (name-value name input) con)))) variable)
     (apply function connectors)
-    (lambda* (var flag #:optional (val 0))
+    (lambda (var flag (val 0))
       (cond ((or (eq? flag 'set-value!) (eq? flag 'set))
              (( (name-value var variable) 'set-value!) val 'user))
             ((or (eq? flag 'forget-value!) (eq? flag 'forget))

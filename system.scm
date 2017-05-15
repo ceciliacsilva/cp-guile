@@ -3,7 +3,9 @@
 ;;Inspiração SICP - 3.3.5 Propagation of Constraints
 ;;Modificado, mais operacoes e nova systax.
 
-(use-modules (ice-9 match))
+#lang racket
+
+(provide (all-defined-out))
 
 (define degrees #t)
 (define pi 3.141592654)
@@ -443,10 +445,10 @@
                                   constraints))
           'ignored))
     (define (connect new-constraint)
-      (if (not (memq new-constraint constraints))
+      (when (not (memq new-constraint constraints))
           (set! constraints
                 (cons new-constraint constraints)))
-      (if (has-value? me)
+      (when (has-value? me)
           (inform-about-value new-constraint))
       'done)
     (define (me request)

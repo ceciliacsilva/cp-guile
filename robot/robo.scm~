@@ -1,17 +1,18 @@
-#|
-Cinemática inversa usando constraint programming.
-|#
+(load "../syntax.scm")
 
-#lang racket
-
-(require "../syntax.scm")
-(require "../system.scm")
-
-;;USE:
-;;> (cinematica-inversa 'x 'set -10)
-;;> (cinematica-inversa 'y 'set 10)
-;;> (cinematica-inversa 'z 'set 10)
-
+;;scheme@(guile-user)> (load "robot/robo.scm")
+;;scheme@(guile-user)> (cinematica-inversa 'x 'set -10)
+;;Probe: X = -10
+;;$1 = done
+;;scheme@(guile-user)> (cinematica-inversa 'y 'set 10)
+;;Probe: Teta1 = 15.79711062303761
+;;Probe: Y = 10
+;;$2 = done
+;;scheme@(guile-user)> (cinematica-inversa 'z 'set 10)
+;;Probe: Teta2 = 85.78601787420045
+;;Probe: Teta3 = 127.00402299819385
+;;Probe: Z = 10
+;;$3 = done
 
 (define cinematica-inversa
   (let ((d1 (cv 9.00))

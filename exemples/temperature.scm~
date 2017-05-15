@@ -1,8 +1,4 @@
-#lang racket
-
-(require "../system.scm")
-(require "../syntax.scm")
-
+(load "../syntax.scm")
 
 ;;syntax original
 ;;REPL:
@@ -10,7 +6,7 @@
 ;;(define F (make-connector))
 ;;(probe "celsius temp" C)
 ;;(probe "fahrenheit temp" F)
-;;(celsius-fahrenheit-converter C F)
+;;(celsuis-fahrenheit-converter C F)
 ;;(set-value! C 30 'user)
 ;;(forget-value! C 'user)
 ;;(set-value! F 80 'user)
