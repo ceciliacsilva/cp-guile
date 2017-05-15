@@ -1,7 +1,4 @@
-#lang racket
-
-(require "../system.scm")
-(require "../syntax.scm")
+(load "../system.scm")
 
 ;;(define X   (make-connector))
 ;;(define Y   (make-connector))

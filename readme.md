@@ -10,7 +10,7 @@ constraints."
 Programs
 ------
 
-The chosen language was Guile <https://www.gnu.org/software/guile/>.
+Language: Racket Language <https://racket-lang.org/>
 
 Functions implemented: +,*,-,/,sin,cos,tan,sqrt,sqr.
 
@@ -35,10 +35,7 @@ At the directory 'exemples' has two very simple programs:
 To use:
 
        $ cd exemples/
-       $ guile
-       > (load "../system.scm")
-       > (load "../syntax.scm")
-       > (load "mix.scm")
+       $ drracket mix.scm
        > (cord-ang 'x 'set 2)
        Probe: x = 2
        $1 = done
@@ -53,3 +50,4 @@ Robot
 -----
 
 Inverse kinematics using constraint programming, modified anthropomorphic robot.
+	File: robot.scm
