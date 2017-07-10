@@ -1,3 +1,6 @@
+Look at the racket brach for updated information
+--------------------
+
 What is Constraint Programming?
 --------------------
 
