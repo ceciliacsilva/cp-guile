@@ -2,6 +2,8 @@
 
 (require math/matrix)
 
+(provide cinematica-direta)
+
 (define (matDH a alpha1 d teta1)
   (let ( (alpha (/ (* pi alpha1) 180))
          (teta  (/ (* pi teta1) 180)) )

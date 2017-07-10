@@ -7,11 +7,12 @@ Cinemática inversa usando constraint programming.
 (require "../syntax.scm")
 (require "../system.scm")
 
+(provide cinematica-inversa)
+
 ;;USE:
 ;;> (cinematica-inversa 'x 'set -10)
 ;;> (cinematica-inversa 'y 'set 10)
 ;;> (cinematica-inversa 'z 'set 10)
-
 
 (define cinematica-inversa
   (let ((d1 (cv 9.00))
