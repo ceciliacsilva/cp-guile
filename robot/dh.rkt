@@ -55,4 +55,4 @@
          (z (matrix-ref T 2 3)) )
     (displayln (~a "x: " x))
     (displayln (~a "y: " y))
-    (displayln (~a "z: " z)) ) )
+    (displayln (~a "z: " z))) )

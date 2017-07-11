@@ -20,5 +20,6 @@
     (displayln "\n==============\n")
     (displayln "Cinematica Direta")
     (cinematica-direta teta1 teta2 teta3)
-    ;;send tetas
+
+    (values teta1 teta2 teta3)
     ) )
