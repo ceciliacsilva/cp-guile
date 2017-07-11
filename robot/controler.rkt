@@ -11,10 +11,10 @@
   (cinematica-inversa 'y 'forget)
   (cinematica-inversa 'z 'forget)
   
-  (cinematica-inversa 'x 'set x)
+  (cinematica-inversa 'x 'set (- x))
   (cinematica-inversa 'y 'set y)
   (cinematica-inversa 'z 'set z)
-  (let ( (teta1 (cinematica-inversa 'teta1 'value))
+  (let ( (teta1 (+ 90 (cinematica-inversa 'teta1 'value)))
          (teta2 (cinematica-inversa 'teta2 'value))
          (teta3 (cinematica-inversa 'teta3 'value)) )
     (displayln "\n==============\n")
